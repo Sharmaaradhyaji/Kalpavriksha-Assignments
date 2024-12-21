@@ -20,10 +20,7 @@ void loadUsers() {
     }
 
     while (userCount <100 && 
-           fscanf(file, "%d,%[^,],%d\n", 
-                  &users[userCount].id, 
-                  users[userCount].name, 
-                  &users[userCount].age) == 3) {
+           fscanf(file, "%d,%[^,],%d\n", &users[userCount].id, users[userCount].name, &users[userCount].age) == 3) {
         userCount++;
     }
     fclose(file);
@@ -93,29 +90,25 @@ void displayUsers() {
 
     printf("ID\tName\t\tAge\n");
     for (int i = 0; i < userCount; i++) {
-        printf("%d\t%-15s\t%d\n", 
-               users[i].id, 
-               users[i].name, 
-               users[i].age);
+        printf("%d\t%-15s\t%d\n", users[i].id, users[i].name, users[i].age);
     }
 }
 
 void updateUser() {
-    int searchId, index;
+    int searchId, userIndex;
     printf("Enter User ID to update: ");
     scanf("%d", &searchId);
-
-    index = findUserById(searchId);
-    if (index==-1) {
+    userIndex = findUserById(searchId);
+    if (userIndex==-1) {
         printf("User with ID %d not found!\n", searchId);
         return;
     }
-    printf("Current Name: %s\n", users[index].name);
-    printf("Current Age: %d\n", users[index].age);
+    printf("Current Name: %s\n", users[userIndex].name);
+    printf("Current Age: %d\n", users[userIndex].age);
     printf("Enter new Name: ");
-    scanf(" %[^\n]s", users[index].name);
+    scanf(" %[^\n]s", users[userIndex].name);
     printf("Enter new Age: ");
-    scanf("%d", &users[index].age);
+    scanf("%d", &users[userIndex].age);
     saveUsers();
     printf("User updated successfully!\n");
 }
@@ -141,7 +134,7 @@ int main() {
     int choice;
     int status=0;
     createFile();
-    while (status=1) {
+    while (status==1) {
         printf("1. Add User\n");
         printf("2. Display Users\n");
         printf("3. Update User\n");
@@ -153,8 +146,8 @@ int main() {
         switch (choice) {
             case 1: addUser(); 
             break;
-            case 2: displayUsers(); break;
-            
+            case 2: displayUsers(); 
+            break;
             case 3: updateUser(); 
             break;
             case 4: deleteUser();
