@@ -17,26 +17,6 @@ void loadUsers()
     FILE *file = fopen("users.txt", "r");
     userCount = 0;
     while (userCount < 100 && fscanf(file, "%d,%[^,],%d\n", &users[userCount].id, users[userCount].name, &users[userCount].age) == 3)
-    // Instead of fscanf, fgets can be used to read each line as a string, 
-    // and then sscanf can be used to parse the string. 
-    // fgets is safer, prevents buffer overflows, and allows special characters.
-    // then use sscanf to parse the string.
-
-    // char line[200]; // Buffer to store a single line
-    // if(fgets(line, sizeof(line), file) != NULL) 
-    // {
-    //     if(sscanf(line, "%d,%[^,],%d", &users[userCount].id, users[userCount].name, &users[userCount].age)==3)
-    //     {
-    //         userCount++;
-    //     }
-    // }
-
-    // Also we can do fgets + strtok+ atoi, and tokenize the string.
-    // if (fgets(line, sizeof(line), file)!= NULL){
-    // char *token =strtok(line, ","); 
-    // users[userCount].id=atoi(token);
-    // The atoi() function converts the token to an integer.
-
     {
         userCount++;
     }
