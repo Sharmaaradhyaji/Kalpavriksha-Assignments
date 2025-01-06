@@ -1,30 +1,30 @@
 #include <stdio.h>
 
-long long evaluate(long long base, long long int pow, long long mod){
-    if (pow==0) 
-        return 1%mod; 
-    long long ans=evaluate(base,pow/2,mod);  
-    ans=(ans*ans)%mod;
-    if(pow%2==1) 
-        ans=(ans*base)%mod;
-    return ans;
+long long evaluate(long long base, long long int powerOfBase, long long modulus){
+    if (powerOfBase==0) 
+        return 1%modulus; 
+    long long answer=evaluate(base,powerOfBase/2,modulus);  
+    answer=(answer*answer)%modulus;
+    if(powerOfBase%2==1) 
+        answer=(answer*base)%modulus;
+    return answer;
 }
 
 int main(){
-    long long base, pow, mod;
+    long long base, powerOfBase, modulus;
     printf("Base: ");
     scanf("%lld", &base);
     printf("Exponent: ");
-    scanf("%lld", &pow);
+    scanf("%lld", &powerOfBase);
     printf("Modulus: ");
-    scanf("%lld", &mod);
-    if(mod<=1){
+    scanf("%lld", &modulus);
+    if(modulus<=1){
         printf("Invalid input: Modulus must be > 1\n");
         return 1;
     }
     if(base<=0){
         printf("Invalid input: Base must be > 1\n");
     }
-    printf("Result: %lld\n", evaluate(base, pow, mod));
+    printf("Result: %lld\n", evaluate(base, powerOfBase, modulus));
     return 0;
 }
