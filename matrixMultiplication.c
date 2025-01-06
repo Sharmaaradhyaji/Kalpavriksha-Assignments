@@ -71,6 +71,20 @@ int main(){
         printf("\n");
     }
 
+    for (int i=0;i<row1;i++){
+        free(matrix1[i]);
+    }
+    free(matrix1);
+
+    for (int i=0;i<row2;i++){
+        free(matrix2[i]);
+    }
+    free(matrix2);
+    for (int i=0;i<row2;i++){
+        free(result[i]);
+    }
+    free(result);
+
     return 0;
 }
 
