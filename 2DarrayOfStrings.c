@@ -4,6 +4,30 @@
 
 #include<stdlib.h>
 
+#include<stdbool.h>
+
+#define maxNameLength 50
+
+bool isVowel(char* name){
+    char firstChar = name[0];
+    if (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u' ||
+        firstChar == 'A' || firstChar == 'E' || firstChar == 'I' || firstChar == 'O' || firstChar == 'U') {
+        return true;
+    }
+    return false;
+}
+
+char ***createMatrix(int rows, int columns) {
+    char ***matrix = (char ***)malloc(rows * sizeof(char **));
+    for (int i = 0; i < rows; i++) {
+        matrix[i] = (char **)malloc(columns * sizeof(char *));
+        for (int j = 0; j < columns; j++) {
+            matrix[i][j] = (char *)malloc(maxNameLength * sizeof(char)); 
+        }
+    }
+    return matrix;
+}
+
 int main(){
 
     int rows, columns;
@@ -13,13 +37,7 @@ int main(){
     printf("\n Enter number of columns: ");
     scanf("%d", &columns);
 
-    char ***matrix = (char ***)malloc(rows*sizeof(char **));
-    for (int i = 0; i < rows; i++){
-        matrix[i]=(char **)malloc(columns*sizeof(char *));
-        for (int j=0; j<columns; j++){
-            matrix[i][j]=(char *)malloc(50*sizeof(char));
-        }
-    }
+    char ***matrix = createMatrix(rows, columns);
 
     printf("\nEnter the names: \n");
 
@@ -41,7 +59,7 @@ int main(){
                 strcpy(longestName, matrix[index1][index2]);
             }
             
-            if(matrix[index1][index2][0]=='a' || matrix[index1][index2][0]=='e' ||matrix[index1][index2][0]=='i' ||matrix[index1][index2][0]=='o' ||matrix[index1][index2][0]=='u' ||matrix[index1][index2][0]=='A' || matrix[index1][index2][0]=='E' ||matrix[index1][index2][0]=='I' ||matrix[index1][index2][0]=='O' ||matrix[index1][index2][0]=='U'){
+            if (isVowel(matrix[index1][index2])) {
                 countOfVowels++;
             }
         }
