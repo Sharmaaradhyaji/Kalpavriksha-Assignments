@@ -98,6 +98,10 @@ int main()
     scanf("%s", newWord);
 
     int stringLengthAfterRemoval = removeWord(string, wordToBeReplaced);
+
+    if(stringLengthAfterRemoval==-1){
+        return 0;
+    }
     addNewWord(string, newWord, stringLengthAfterRemoval);
 
     printf("\nNew string is: %s", string);
