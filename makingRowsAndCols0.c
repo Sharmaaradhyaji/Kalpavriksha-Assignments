@@ -6,15 +6,17 @@ void alteringMatrix(int matrix[10][10], int dimensions[2], int alteredDimensions
 
     for (int index1 = alteredDimensions[0] + 1; index1 < dimensions[0]; index1++)
     {
-        for (int index2 = alteredDimensions[1] + 1; index2 < dimensions[1]; index2++)
+        for (int index2 = 0; index2 < dimensions[1]; index2++)
         {
             if (matrix[index1][index2] == 0)
             {
                 row = index1;
                 column = index2;
+                break;
             }
-            index1 != alteredDimensions[0];
         }
+        if (row != -1)
+            break;
     }
 
     alteredDimensions[0] = row;
@@ -25,15 +27,26 @@ void alteringMatrix(int matrix[10][10], int dimensions[2], int alteredDimensions
 
     for (int iterator = 0; iterator < dimensions[0]; iterator++)
     {
-        matrix[iterator][column] = 0;
+        if (matrix[iterator][column] != 0)
+            matrix[iterator][column] = -1;
     }
 
     for (int iterator = 0; iterator < dimensions[1]; iterator++)
     {
-        matrix[row][iterator] = 0;
+        if (matrix[row][iterator] != 0)
+            matrix[row][iterator] = -1;
     }
 
     alteringMatrix(matrix, dimensions, alteredDimensions);
+
+    for (int index1 = 0; index1 < dimensions[0]; index1++)
+    {
+        for (int index2 = 0; index2 < dimensions[1]; index2++)
+        {
+            if (matrix[index1][index2] == -1)
+                matrix[index1][index2] = 0;
+        }
+    }
 }
 
 void printMatrix(int grid[][10], int rows, int columns)
@@ -80,5 +93,4 @@ int main()
 
     return 0;
 }
-
 
