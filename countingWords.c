@@ -1,21 +1,26 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-int countingWords(char string[]){
-    int count=0;
-    int index=0;
-    int flag=0;
+int countingWords(char string[])
+{
+    int count = 0;
+    int index = 0;
+    int flag = 0;
 
-    while(string[index]!='\0'){
-        if(string[index+1]=='\0' && flag==1){
+    while (string[index] != '\0')
+    {
+        if (string[index + 1] == '\0' && flag == 1)
+        {
             count++;
         }
-        if((string[index]>='a' && string[index]<='z') || (string[index]>='A' && string[index]<='Z') || (string[index]>='0' && string[index]<='9')){
-            flag=1;
+        if ((string[index] >= 'a' && string[index] <= 'z') || (string[index] >= 'A' && string[index] <= 'Z') || (string[index] >= '0' && string[index] <= '9'))
+        {
+            flag = 1;
         }
-        else if(string[index]==' ' && flag==1){
-            flag=0;
+        else if (string[index] == ' ' && flag == 1)
+        {
+            flag = 0;
             count++;
         }
         index++;
@@ -24,9 +29,10 @@ int countingWords(char string[]){
     return count;
 }
 
-int main(){
+int main()
+{
     char string[100];
-    
+
     printf("Enter string: ");
     scanf("%[^\n]", string);
 
@@ -34,3 +40,4 @@ int main(){
 
     return 0;
 }
+
