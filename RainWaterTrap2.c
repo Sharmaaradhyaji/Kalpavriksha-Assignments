@@ -1,11 +1,7 @@
 #include <stdio.h>
 
-int waterTrapped(int matrix[][100], int rows, int columns)
+void leftMax(int matrix[][100], int maxLeft[][100], int rows, int columns)
 {
-    int maxLeft[rows][columns], maxRight[rows][columns];
-    int maxTop[rows][columns], maxBottom[rows][columns];
-    int water = 0;
-
     for (int index1 = 0; index1 < rows; index1++)
     {
         maxLeft[index1][0] = matrix[index1][0];
@@ -21,7 +17,10 @@ int waterTrapped(int matrix[][100], int rows, int columns)
             }
         }
     }
+}
 
+void rightMax(int matrix[][100], int maxRight[][100], int rows, int columns)
+{
     for (int index1 = 0; index1 < rows; index1++)
     {
         maxRight[index1][columns - 1] = matrix[index1][columns - 1];
@@ -37,7 +36,10 @@ int waterTrapped(int matrix[][100], int rows, int columns)
             }
         }
     }
+}
 
+void topMax(int matrix[][100], int maxTop[][100], int rows, int columns)
+{
     for (int index2 = 0; index2 < columns; index2++)
     {
         maxTop[0][index2] = matrix[0][index2];
@@ -53,7 +55,10 @@ int waterTrapped(int matrix[][100], int rows, int columns)
             }
         }
     }
+}
 
+void bottomMax(int matrix[][100], int maxBottom[][100], int rows, int columns)
+{
     for (int index2 = 0; index2 < columns; index2++)
     {
         maxBottom[rows - 1][index2] = matrix[rows - 1][index2];
@@ -69,6 +74,21 @@ int waterTrapped(int matrix[][100], int rows, int columns)
             }
         }
     }
+}
+
+int waterTrapped(int matrix[][100], int rows, int columns)
+{
+    int maxLeft[100][100], maxRight[100][100];
+    int maxTop[100][100], maxBottom[100][100];
+    int water = 0;
+
+    leftMax(matrix, maxLeft, rows, columns);
+
+    rightMax(matrix, maxRight, rows, columns);
+
+    topMax(matrix, maxTop, rows, columns);
+
+    bottomMax(matrix, maxBottom, rows, columns);
 
     for (int index1 = 1; index1 < rows - 1; index1++)
     {
@@ -94,8 +114,19 @@ int waterTrapped(int matrix[][100], int rows, int columns)
             }
         }
     }
-
     return water;
+}
+
+void printMatrix(int matrix[][100], int rows, int columns)
+{
+    for (int index1 = 0; index1 < rows; index1++)
+    {
+        for (int index2 = 0; index2 < columns; index2++)
+        {
+            printf("%d ", matrix[index1][index2]);
+        }
+        printf("\n");
+    }
 }
 
 int main()
@@ -109,23 +140,17 @@ int main()
 
     int matrix[100][100];
     printf("Enter the values of the matrix: \n");
-    for (int index1 = 0; index1 < rows; index1++)
+    for (int rowIndex = 0; rowIndex < rows; rowIndex++)
     {
-        for (int index2 = 0; index2 < columns; index2++)
+        for (int colIndex = 0; colIndex < columns; colIndex++)
         {
-            scanf("%d", &matrix[index1][index2]);
+            printf("Enter element for %dth row, %dth column: ", rowIndex, colIndex);
+            scanf("%d", &matrix[rowIndex][colIndex]);
         }
     }
 
     printf("The matrix is:\n");
-    for (int index1 = 0; index1 < rows; index1++)
-    {
-        for (int index2 = 0; index2 < columns; index2++)
-        {
-            printf("%d ", matrix[index1][index2]);
-        }
-        printf("\n");
-    }
+    printMatrix(matrix, rows, columns);
 
     int water = waterTrapped(matrix, rows, columns);
     printf("Total water trapped is: %d", water);
