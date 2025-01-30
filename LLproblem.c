@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define size 100
+
 struct Element
 {
     int ID;
@@ -14,32 +16,63 @@ struct Node
     struct Node *next;
 };
 
-struct Element list[100];
-int iterator = 0;
+struct Element list[size];
 
-void sort(int input)
+void merge(int left, int mid, int right)
 {
-    for (int i = 0; i < input - 1; i++)
+    int leftSize = mid - left + 1;
+    int rightSize = right - mid;
+
+    struct Element leftArr[leftSize], rightArr[rightSize];
+
+    for (int index = 0; index < leftSize; index++)
+        leftArr[index] = list[left + index];
+
+    for (int index = 0; index < rightSize; index++)
+        rightArr[index] = list[mid + 1 + index];
+
+    int index1 = 0, index2 = 0, index3 = left;
+    while (index1 < leftSize && index2 < rightSize)
     {
-        for (int j = 0; j < input - i - 1; j++)
+        if (leftArr[index1].situation < rightArr[index2].situation)
         {
-            if (list[j].situation > list[j + 1].situation)
-            {
-                struct Element temp = list[j];
-                list[j] = list[j + 1];
-                list[j + 1] = temp;
-            }
+            list[index3++] = leftArr[index1++];
         }
+        else
+        {
+            list[index3++] = rightArr[index2++];
+        }
+    }
+
+    while (index1 < leftSize)
+    {
+        list[index3++] = leftArr[index1++];
+    }
+
+    while (index2 < rightSize)
+    {
+        list[index3++] = rightArr[index2++];
     }
 }
 
-struct Node *creatingLL()
+void mergeSort(int left, int right)
+{
+    if (left < right)
+    {
+        int mid = left + (right - left) / 2;
+        mergeSort(left, mid);
+        mergeSort(mid + 1, right);
+        merge(left, mid, right);
+    }
+}
+
+struct Node *creatingLL(int iterator)
 {
     struct Node *head = NULL, *temp = NULL, *prev = NULL;
-    for (int i = 0; i < iterator; i++)
+    for (int index = 0; index < iterator; index++)
     {
         temp = (struct Node *)malloc(sizeof(struct Node));
-        temp->data = list[i];
+        temp->data = list[index];
         temp->next = NULL;
         if (prev == NULL)
         {
@@ -54,7 +87,7 @@ struct Node *creatingLL()
     return head;
 }
 
-void processString(char string[100])
+int processString(char string[100], int iterator)
 {
     int index = 0, number = 0;
 
@@ -70,12 +103,12 @@ void processString(char string[100])
         index++;
 
     char situation[10];
-    int i = 0;
+    int tempIterator = 0;
     while (string[index] != '\0')
     {
-        situation[i++] = string[index++];
+        situation[tempIterator++] = string[index++];
     }
-    situation[i] = '\0';
+    situation[tempIterator] = '\0';
 
     if (strcmp(situation, "Critical") == 0)
     {
@@ -90,7 +123,7 @@ void processString(char string[100])
         list[iterator].situation = 3;
     }
 
-    iterator++;
+    return iterator + 1;
 }
 
 int main()
@@ -101,16 +134,17 @@ int main()
     getchar();
 
     char string[100];
-    for (int i = 0; i < input; i++)
+    int iterator = 0;
+    for (int index = 0; index < input; index++)
     {
         fgets(string, sizeof(string), stdin);
         string[strcspn(string, "\n")] = '\0';
-        processString(string);
+        iterator = processString(string, iterator);
     }
 
-    sort(input);
+    mergeSort(0, input - 1);
 
-    struct Node *head = creatingLL();
+    struct Node *head = creatingLL(iterator);
     struct Node *temp = head;
 
     printf("The sorted list is:\n");
