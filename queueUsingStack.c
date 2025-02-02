@@ -7,7 +7,7 @@ struct Stack
     int top, size;
 };
 
-void enqueue(struct Stack *stack, int value)
+void push(struct Stack *stack, int value)
 {
     if (stack->size == 100)
     {
@@ -18,81 +18,83 @@ void enqueue(struct Stack *stack, int value)
     stack->size++;
 }
 
-int dequeue(struct Stack *stack)
+int pop(struct Stack *stack)
 {
     if (stack->size == 0)
     {
         printf("Queue Underflow!\n");
         return -1;
     }
-
-    struct Stack *tempStack = (struct Stack *)malloc(sizeof(struct Stack));
-    tempStack->top = -1;
-    tempStack->size = 0;
-
-    while (stack->size > 1)
-    {
-        enqueue(tempStack, stack->data[stack->top--]);
-        stack->size--;
-    }
-
-    int dequeuedValue = stack->data[stack->top--];
     stack->size--;
-
-    while (tempStack->size > 0)
-    {
-        enqueue(stack, tempStack->data[tempStack->top--]);
-        tempStack->size--;
-    }
-
-    free(tempStack);
-    return dequeuedValue;
+    return stack->data[(stack->top)--];
 }
 
-int front(struct Stack *stack)
+void enqueue(struct Stack *stack1)
 {
-    if (stack->size == 0)
+    int value;
+    printf("Enter data: ");
+    scanf("%d", &value);
+    push(stack1, value);
+}
+
+int dequeue(struct Stack *stack1, struct Stack *stack2)
+{
+    if (stack1->size == 0 && stack2->size == 0)
+    {
+        printf("Queue Underflow!\n");
+        return -1;
+    }
+
+    if (stack2->size == 0)
+    {
+        while (stack1->size > 0)
+        {
+            int value = pop(stack1);
+            push(stack2, value);
+        }
+    }
+
+    return pop(stack2);
+}
+
+int front(struct Stack *stack1, struct Stack *stack2)
+{
+    if (stack1->size == 0 && stack2->size == 0)
     {
         printf("Queue is empty.\n");
         return -1;
     }
 
-    struct Stack *tempStack = (struct Stack *)malloc(sizeof(struct Stack));
-    tempStack->size = 0;
-    tempStack->top = -1;
-
-    while (stack->size > 0)
+    if (stack2->size == 0)
     {
-        enqueue(tempStack, stack->data[stack->top--]);
-        stack->size--;
+        while (stack1->size > 0)
+        {
+            int value = pop(stack2);
+            push(stack2, value);
+        }
     }
 
-    int frontElement = tempStack->data[tempStack->top];
-
-    while (tempStack->size > 0)
-    {
-        enqueue(stack, tempStack->data[tempStack->top--]);
-        tempStack->size--;
-    }
-
-    free(tempStack);
-    return frontElement;
+    return stack2->data[stack2->top];
 }
 
-int isEmpty(struct Stack *stack)
+int isEmpty(struct Stack *stack1, struct Stack *stack2)
 {
-    return stack->size == 0;
+    return stack1->size == 0 && stack2->size == 0;
 }
 
 int main()
 {
-    struct Stack *stack = (struct Stack *)malloc(sizeof(struct Stack));
-    stack->top = -1;
-    stack->size = 0;
+    struct Stack *stack1 = (struct Stack *)malloc(sizeof(struct Stack));
+    struct Stack *stack2 = (struct Stack *)malloc(sizeof(struct Stack));
+
+    stack1->top = -1;
+    stack1->size = 0;
+    stack2->top = -1;
+    stack2->size = 0;
 
     int choice, data;
 
-    printf("\nQueue Using One Stack (Iterative Dequeue)\n");
+    printf("\nQueue Using Two Stacks\n");
     printf("1. Enqueue\n2. Dequeue\n3. Display Front\n4. Check Empty\n5. Exit\n");
 
     while (1)
@@ -103,25 +105,24 @@ int main()
         switch (choice)
         {
         case 1:
-            printf("Enter data: ");
-            scanf("%d", &data);
-            enqueue(stack, data);
+            enqueue(stack1);
             break;
         case 2:
-            data = dequeue(stack);
+            data = dequeue(stack1, stack2);
             if (data != -1)
                 printf("Dequeued: %d\n", data);
             break;
         case 3:
-            data = front(stack);
+            data = front(stack1, stack2);
             if (data != -1)
                 printf("Front: %d\n", data);
             break;
         case 4:
-            printf(isEmpty(stack) ? "Queue is Empty\n" : "Queue is Not Empty\n");
+            printf(isEmpty(stack1, stack2) ? "Queue is Empty\n" : "Queue is Not Empty\n");
             break;
         case 5:
-            free(stack);
+            free(stack1);
+            free(stack2);
             printf("Exiting...\n");
             return 0;
         default:
