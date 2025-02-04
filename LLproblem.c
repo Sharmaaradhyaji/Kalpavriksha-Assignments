@@ -18,52 +18,35 @@ struct Node
 
 struct Element list[size];
 
-void merge(int left, int mid, int right)
+struct Node *bubbleSort(struct Node *head)
 {
-    int leftSize = mid - left + 1;
-    int rightSize = right - mid;
+    if (head == NULL)
+        return head;
 
-    struct Element leftArr[leftSize], rightArr[rightSize];
+    int swapped;
+    struct Node *ptr1;
+    struct Node *lptr = NULL;
 
-    for (int index = 0; index < leftSize; index++)
-        leftArr[index] = list[left + index];
-
-    for (int index = 0; index < rightSize; index++)
-        rightArr[index] = list[mid + 1 + index];
-
-    int index1 = 0, index2 = 0, index3 = left;
-    while (index1 < leftSize && index2 < rightSize)
+    do
     {
-        if (leftArr[index1].situation < rightArr[index2].situation)
+        swapped = 0;
+        ptr1 = head;
+
+        while (ptr1->next != lptr)
         {
-            list[index3++] = leftArr[index1++];
+            if (ptr1->data.situation > ptr1->next->data.situation)
+            {
+                struct Element temp = ptr1->data;
+                ptr1->data = ptr1->next->data;
+                ptr1->next->data = temp;
+                swapped = 1;
+            }
+            ptr1 = ptr1->next;
         }
-        else
-        {
-            list[index3++] = rightArr[index2++];
-        }
-    }
+        lptr = ptr1;
+    } while (swapped);
 
-    while (index1 < leftSize)
-    {
-        list[index3++] = leftArr[index1++];
-    }
-
-    while (index2 < rightSize)
-    {
-        list[index3++] = rightArr[index2++];
-    }
-}
-
-void mergeSort(int left, int right)
-{
-    if (left < right)
-    {
-        int mid = left + (right - left) / 2;
-        mergeSort(left, mid);
-        mergeSort(mid + 1, right);
-        merge(left, mid, right);
-    }
+    return head;
 }
 
 struct Node *creatingLL(int iterator)
@@ -142,9 +125,10 @@ int main()
         iterator = processString(string, iterator);
     }
 
-    mergeSort(0, input - 1);
-
     struct Node *head = creatingLL(iterator);
+
+    head = bubbleSort(head);
+
     struct Node *temp = head;
 
     printf("The sorted list is:\n");
