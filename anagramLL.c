@@ -15,7 +15,6 @@ struct Hash
 };
 
 struct Hash *List[100];
-int iterator = 0;
 
 void sort(char word[50])
 {
@@ -36,7 +35,6 @@ void sort(char word[50])
 
 int main()
 {
-
     char *words[] = {"listen", "silent", "enlist", "rat", "tar", "art", "dog", "god"};
     int n = 8;
 
@@ -54,45 +52,55 @@ int main()
         strcpy(List[i]->shabd, sortedString);
     }
 
-    int i = 0;
-    while (i < n)
+    int processed[n];
+    for (int i = 0; i < n; i++)
     {
+        processed[i] = 0;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        if (processed[i])
+            continue;
+
         char word[50];
         strcpy(word, List[i]->shabd);
 
         struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-        strcpy(newNode->string, word);
+        strcpy(newNode->string, words[i]);
         newNode->next = NULL;
-        if (!List[i]->head)
+
+        if (List[i]->head == NULL)
         {
             List[i]->head = newNode;
         }
         else
         {
-            break;
+            struct Node *temp = List[i]->head;
+            while (temp->next)
+                temp = temp->next;
+            temp->next = newNode;
         }
-        struct Node *newHead = newNode;
-        int j = 0;
-        while (j < n)
-        {
-            if (j == i)
-            {
-                j++;
-                continue;
-            }
 
+        for (int j = i + 1; j < n; j++)
+        {
+            if (processed[j])
+                continue;
             if (strcmp(word, List[j]->shabd) == 0)
             {
                 struct Node *tempNode = (struct Node *)malloc(sizeof(struct Node));
-                strcpy(newNode->string, word);
-                newNode->next = tempNode;
-                newNode = tempNode;
+                strcpy(tempNode->string, words[j]);
                 tempNode->next = NULL;
-                List[j]->head = newHead;
+
+                struct Node *temp = List[i]->head;
+                while (temp->next)
+                    temp = temp->next;
+                temp->next = tempNode;
+
+                processed[j] = 1;
             }
-            j++;
         }
-        i++;
+        processed[i] = 1;
     }
 
     int group = 1;
@@ -118,5 +126,21 @@ int main()
         }
     }
 
+    for (int i = 0; i < n; i++)
+    {
+        if (List[i])
+        {
+            struct Node *temp = List[i]->head;
+            while (temp)
+            {
+                struct Node *toDelete = temp;
+                temp = temp->next;
+                free(toDelete);
+            }
+            free(List[i]);
+        }
+    }
+
     return 0;
 }
+
