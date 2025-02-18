@@ -28,13 +28,14 @@ void push(struct Stack *stack, int value)
     stack->size++;
 }
 
-int pop(struct Stack *stack)
+int pop(struct Stack *stack, int *success)
 {
     if (stack->size == 0)
     {
-        printf("Queue Underflow!\n");
+        *success = 0;
         return -1;
     }
+    *success = 1;
     stack->size--;
     return stack->data[(stack->top)--];
 }
@@ -47,11 +48,12 @@ void enqueue(struct Stack *stack1)
     push(stack1, value);
 }
 
-int dequeue(struct Stack *stack1, struct Stack *stack2)
+int dequeue(struct Stack *stack1, struct Stack *stack2, int *success)
 {
     if (stack1->size == 0 && stack2->size == 0)
     {
         printf("Queue Underflow!\n");
+        *success = 0;
         return -1;
     }
 
@@ -59,19 +61,20 @@ int dequeue(struct Stack *stack1, struct Stack *stack2)
     {
         while (stack1->size > 0)
         {
-            int value = pop(stack1);
+            int value = pop(stack1, success);
             push(stack2, value);
         }
     }
 
-    return pop(stack2);
+    return pop(stack2, success);
 }
 
-int front(struct Stack *stack1, struct Stack *stack2)
+int front(struct Stack *stack1, struct Stack *stack2, int *success)
 {
     if (stack1->size == 0 && stack2->size == 0)
     {
         printf("Queue is empty.\n");
+        *success = 0;
         return -1;
     }
 
@@ -79,11 +82,12 @@ int front(struct Stack *stack1, struct Stack *stack2)
     {
         while (stack1->size > 0)
         {
-            int value = pop(stack1);
+            int value = pop(stack1, success);
             push(stack2, value);
         }
     }
 
+    *success = 1;
     return stack2->data[stack2->top];
 }
 
@@ -102,7 +106,7 @@ int main()
     struct Stack *stack1 = init();
     struct Stack *stack2 = init();
 
-    int choice, data;
+    int choice, data, success;
 
     printf("\nQueue Using Two Stacks\n");
     printf("1. Enqueue\n2. Dequeue\n3. Display Front\n4. Check Empty\n5. Exit\n");
@@ -118,13 +122,13 @@ int main()
             enqueue(stack1);
             break;
         case 2:
-            data = dequeue(stack1, stack2);
-            if (data != -1)
+            data = dequeue(stack1, stack2, &success);
+            if (success)
                 printf("Dequeued: %d\n", data);
             break;
         case 3:
-            data = front(stack1, stack2);
-            if (data != -1)
+            data = front(stack1, stack2, &success);
+            if (success)
                 printf("Front: %d\n", data);
             break;
         case 4:
@@ -134,10 +138,13 @@ int main()
             freeStack(stack1);
             freeStack(stack2);
             printf("Exiting...\n");
-            return 0;
+            break;
         default:
             printf("Invalid Choice!\n");
         }
+
+        if (choice == 5)
+            break;
     }
 
     return 0;
