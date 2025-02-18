@@ -55,8 +55,16 @@ void freeList(struct Node *head)
 
 int main()
 {
-    char *words[] = {"listen", "dog", "art", "rat", "tar", "enlist", "silent", "god"};
-    int n = 8;
+    char words[100][100];
+    int n;
+
+    printf("Insert the number of words: ");
+    scanf("%d", &n);
+    
+    printf("Insert words: \n");
+    for(int i=0;i<n;i++){
+        scanf("%s", words[i]);
+    }
 
     int processed[n];
     for (int i = 0; i < n; i++)
@@ -77,6 +85,7 @@ int main()
         }
 
         struct Node *head = NULL;
+        struct Node *tail = NULL;
         if (processed[i])
         {
             continue;
@@ -96,15 +105,12 @@ int main()
                 if (!head)
                 {
                     head = newNode;
+                    tail=newNode;
                 }
                 else
                 {
-                    struct Node *temp = head;
-                    while (temp->next)
-                    {
-                        temp = temp->next;
-                    }
-                    temp->next = newNode;
+                    tail->next=newNode;
+                    tail=tail->next;
                 }
             }
         }
