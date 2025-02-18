@@ -34,6 +34,8 @@ struct Node* pop(struct Node* head)
         printf("Stack is empty.\n");
         return NULL;
     }
+    
+    int poppedValue = head->data;
     struct Node* temp = head;
     head = head->next; 
 
@@ -42,9 +44,10 @@ struct Node* pop(struct Node* head)
     }
 
     free(temp);
-    printf("Value removed\n");
+    printf("Popped value: %d\n", poppedValue); 
     return head;
 }
+
 
 void peek(struct Node *head)
 {
