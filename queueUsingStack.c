@@ -1,15 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SIZE 100
+
 struct Stack
 {
-    int data[100];
+    int data[SIZE];
     int top, size;
 };
 
+struct Stack *init()
+{
+    struct Stack *stack = (struct Stack *)malloc(sizeof(struct Stack));
+    stack->top = -1;
+    stack->size = 0;
+    return stack;
+}
+
 void push(struct Stack *stack, int value)
 {
-    if (stack->size == 100)
+    if (stack->size == SIZE)
     {
         printf("Queue Overflow!\n");
         return;
@@ -69,7 +79,7 @@ int front(struct Stack *stack1, struct Stack *stack2)
     {
         while (stack1->size > 0)
         {
-            int value = pop(stack2);
+            int value = pop(stack1);
             push(stack2, value);
         }
     }
@@ -82,15 +92,15 @@ int isEmpty(struct Stack *stack1, struct Stack *stack2)
     return stack1->size == 0 && stack2->size == 0;
 }
 
+void freeStack(struct Stack *stack)
+{
+    free(stack);
+}
+
 int main()
 {
-    struct Stack *stack1 = (struct Stack *)malloc(sizeof(struct Stack));
-    struct Stack *stack2 = (struct Stack *)malloc(sizeof(struct Stack));
-
-    stack1->top = -1;
-    stack1->size = 0;
-    stack2->top = -1;
-    stack2->size = 0;
+    struct Stack *stack1 = init();
+    struct Stack *stack2 = init();
 
     int choice, data;
 
@@ -121,8 +131,8 @@ int main()
             printf(isEmpty(stack1, stack2) ? "Queue is Empty\n" : "Queue is Not Empty\n");
             break;
         case 5:
-            free(stack1);
-            free(stack2);
+            freeStack(stack1);
+            freeStack(stack2);
             printf("Exiting...\n");
             return 0;
         default:
