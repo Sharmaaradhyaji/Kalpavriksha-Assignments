@@ -1,81 +1,89 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define STACK_SIZE 100
+
 struct Stack
 {
-    int data[100];
+    int data[STACK_SIZE];
     int top, size;
 };
 
-void enqueue(struct Stack *stack, int value)
+void initStack(struct Stack *stack)
 {
-    if (stack->size == 100)
-    {
-        printf("Queue Overflow!\n");
-        return;
-    }
-    stack->data[++(stack->top)] = value;
-    stack->size++;
+    stack->top = -1;
+    stack->size = 0;
 }
 
-int dequeue(struct Stack *stack)
+void enqueue(struct Stack *stack, int value)
 {
+    if (stack->size == STACK_SIZE)
+        printf("Queue Overflow!\n");
+    else
+    {
+        stack->data[++(stack->top)] = value;
+        stack->size++;
+    }
+}
+
+int dequeue(struct Stack *stack, int *success)
+{
+    int dequeuedValue = -1;
+    *success = 0;
+
     if (stack->size == 0)
-    {
         printf("Queue Underflow!\n");
-        return -1;
-    }
-
-    struct Stack *tempStack = (struct Stack *)malloc(sizeof(struct Stack));
-    tempStack->top = -1;
-    tempStack->size = 0;
-
-    while (stack->size > 1)
+    else
     {
-        enqueue(tempStack, stack->data[stack->top--]);
+        struct Stack tempStack;
+        initStack(&tempStack);
+
+        while (stack->size > 1)
+        {
+            enqueue(&tempStack, stack->data[stack->top--]);
+            stack->size--;
+        }
+
+        dequeuedValue = stack->data[stack->top--];
         stack->size--;
+        *success = 1;
+
+        while (tempStack.size > 0)
+        {
+            enqueue(stack, tempStack.data[tempStack.top--]);
+            tempStack.size--;
+        }
     }
-
-    int dequeuedValue = stack->data[stack->top--];
-    stack->size--;
-
-    while (tempStack->size > 0)
-    {
-        enqueue(stack, tempStack->data[tempStack->top--]);
-        tempStack->size--;
-    }
-
-    free(tempStack);
     return dequeuedValue;
 }
 
-int front(struct Stack *stack)
+int front(struct Stack *stack, int *success)
 {
+    int frontElement = -1;
+    *success = 0;
+
     if (stack->size == 0)
-    {
         printf("Queue is empty.\n");
-        return -1;
-    }
-
-    struct Stack *tempStack = (struct Stack *)malloc(sizeof(struct Stack));
-    tempStack->size = 0;
-    tempStack->top = -1;
-
-    while (stack->size > 0)
+    else
     {
-        enqueue(tempStack, stack->data[stack->top--]);
-        stack->size--;
+        struct Stack tempStack;
+        initStack(&tempStack);
+
+        while (stack->size > 0)
+        {
+            enqueue(&tempStack, stack->data[stack->top--]);
+            stack->size--;
+        }
+
+        frontElement = tempStack.data[tempStack.top];
+        *success = 1;
+
+        while (tempStack.size > 0)
+        {
+            enqueue(stack, tempStack.data[tempStack.top--]);
+            tempStack.size--;
+        }
     }
-
-    int frontElement = tempStack->data[tempStack->top];
-
-    while (tempStack->size > 0)
-    {
-        enqueue(stack, tempStack->data[tempStack->top--]);
-        tempStack->size--;
-    }
-
-    free(tempStack);
     return frontElement;
 }
 
@@ -87,10 +95,9 @@ int isEmpty(struct Stack *stack)
 int main()
 {
     struct Stack *stack = (struct Stack *)malloc(sizeof(struct Stack));
-    stack->top = -1;
-    stack->size = 0;
+    initStack(stack);
 
-    int choice, data;
+    int choice, data, success;
 
     printf("\nQueue Using One Stack (Iterative Dequeue)\n");
     printf("1. Enqueue\n2. Dequeue\n3. Display Front\n4. Check Empty\n5. Exit\n");
@@ -108,13 +115,13 @@ int main()
             enqueue(stack, data);
             break;
         case 2:
-            data = dequeue(stack);
-            if (data != -1)
+            data = dequeue(stack, &success);
+            if (success)
                 printf("Dequeued: %d\n", data);
             break;
         case 3:
-            data = front(stack);
-            if (data != -1)
+            data = front(stack, &success);
+            if (success)
                 printf("Front: %d\n", data);
             break;
         case 4:
@@ -123,10 +130,13 @@ int main()
         case 5:
             free(stack);
             printf("Exiting...\n");
-            return 0;
+            break;
         default:
             printf("Invalid Choice!\n");
         }
+
+        if (choice == 5)
+            break;
     }
 
     return 0;
