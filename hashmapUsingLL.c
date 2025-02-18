@@ -87,12 +87,12 @@ void deleteKey(struct HashMap *map, int key)
 void display(struct HashMap *map)
 {
     printf("Hash Table:\n");
-    for (int i = 0; i < TABLE_SIZE; i++)
+    for (int index = 0; index < TABLE_SIZE; index++)
     {
-        struct Node *current = map->table[i];
+        struct Node *current = map->table[index];
         if (current != NULL)
         {
-            printf("Index %d: ", i);
+            printf("Index %d: ", index);
             while (current != NULL)
             {
                 printf("(%d, %d) -> ", current->key, current->value);
@@ -106,9 +106,9 @@ void display(struct HashMap *map)
 int main()
 {
     struct HashMap *map = (struct HashMap *)malloc(sizeof(struct HashMap));
-    for (int i = 0; i < TABLE_SIZE; i++)
+    for (int index = 0; index < TABLE_SIZE; index++)
     {
-        map->table[i] = NULL;
+        map->table[index] = NULL;
     }
 
     int choice, key, value;
