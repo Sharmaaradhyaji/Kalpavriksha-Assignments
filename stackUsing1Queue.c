@@ -1,121 +1,120 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_QUEUE_SIZE 100
+
 struct Queue
 {
-    int data[100];
+    int data[MAX_QUEUE_SIZE];
     int rear, front, size;
 };
 
+void initializeQueue(struct Queue *queue)
+{
+    queue->front = 0;
+    queue->rear = -1;
+    queue->size = 0;
+}
+
+int isEmpty(struct Queue *queue)
+{
+    if (queue->size == 0)
+    {
+        printf("Stack is empty.\n");
+        return 1;
+    }
+    return 0;
+}
+
 void push(struct Queue *queue, int value)
 {
-    if (queue->size == 100)
+    if (queue->size == MAX_QUEUE_SIZE)
     {
-        printf("Stack is Full.\n");
+        printf("Stack is full.\n");
         return;
     }
 
-    queue->rear = (queue->rear + 1) % 100;
+    queue->rear = (queue->rear + 1) % MAX_QUEUE_SIZE;
     queue->data[queue->rear] = value;
     queue->size++;
 
     for (int i = 0; i < queue->size - 1; i++)
     {
         int temp = queue->data[queue->front];
-        queue->front = (queue->front + 1) % 100;
-        queue->rear = (queue->rear + 1) % 100;
+        queue->front = (queue->front + 1) % MAX_QUEUE_SIZE;
+        queue->rear = (queue->rear + 1) % MAX_QUEUE_SIZE;
         queue->data[queue->rear] = temp;
     }
 }
 
 void pop(struct Queue *queue)
 {
-    if (queue->size == 0)
+    if (!isEmpty(queue))
     {
-        printf("Stack is empty.\n");
-        return;
+        queue->front = (queue->front + 1) % MAX_QUEUE_SIZE;
+        queue->size--;
     }
-    queue->front = (queue->front + 1) % 100;
-    queue->size--;
 }
 
-int topDisplay(struct Queue *queue)
+int getTop(struct Queue *queue)
 {
-    if (queue->size == 0)
-    {
-        printf("Stack is empty.\n");
+    if (isEmpty(queue))
         return -1;
-    }
     return queue->data[queue->front];
 }
 
-int sizeDisplay(struct Queue *queue)
+int getSize(struct Queue *queue)
 {
     return queue->size;
-}
-
-int isEmpty(struct Queue *queue)
-{
-    return queue->size == 0;
 }
 
 int main()
 {
     struct Queue q;
-    q.front = 0;
-    q.size = 0;
-    q.rear = -1;
+    initializeQueue(&q);
 
     int choice, data;
 
-    printf("\nStack implementation using a single queue\n");
-    printf("1. Push element onto the stack\n");
-    printf("2. Display the top element of the stack\n");
-    printf("3. Pop element from the stack\n");
-    printf("4. Display the size of the stack\n");
-    printf("5. Check if the stack is empty\n");
+    printf("\nStack Implementation Using a Single Queue\n");
+    printf("1. Push Element onto the Stack\n");
+    printf("2. Display the Top Element of the Stack\n");
+    printf("3. Pop Element from the Stack\n");
+    printf("4. Display the Size of the Stack\n");
+    printf("5. Check if the Stack is Empty\n");
     printf("6. Exit\n");
 
     while (1)
     {
-        printf("\nEnter your choice: ");
+        printf("\nEnter Your Choice: ");
         scanf("%d", &choice);
 
         switch (choice)
         {
         case 1:
-            printf("Enter the data you want to push: ");
+            printf("Enter the Data You Want to Push: ");
             scanf("%d", &data);
             push(&q, data);
             break;
         case 2:
-            data = topDisplay(&q);
+            data = getTop(&q);
             if (data != -1)
-                printf("Top element is: %d\n", data);
+                printf("Top Element is: %d\n", data);
             break;
         case 3:
             pop(&q);
             break;
         case 4:
-            printf("Size of the stack is: %d\n", sizeDisplay(&q));
+            printf("Size of the Stack is: %d\n", getSize(&q));
             break;
         case 5:
-            if (isEmpty(&q))
-            {
-                printf("Stack is empty\n");
-            }
-            else
-            {
-                printf("Stack is not empty\n");
-            }
+            isEmpty(&q);
             break;
         case 6:
-            printf("Exiting the program\n");
+            printf("Exiting the Program\n");
             return 0;
         default:
-            printf("Enter a valid choice.\n");
+            printf("Enter a Valid Choice.\n");
         }
     }
-
-    return 0;
 }
+
