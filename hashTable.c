@@ -28,13 +28,14 @@ void insert(int tID, int uID, float amnt, int stamp)
 
     while (temp != NULL)
     {
-        if (temp->userID == uID && temp->amount == amnt ||
+        if (temp->userID == uID && temp->amount == amnt &&
             (stamp - temp->timestamp) <= 60)
         {
+            // Duplicate transaction found, remove it
             printf("Duplicate transaction detected! Removing TransactionID: %d\n", temp->transactionID);
 
             if (prev == NULL)
-            {
+            { // Removing the first node in the linked list
                 List[index] = temp->next;
             }
             else
@@ -47,6 +48,8 @@ void insert(int tID, int uID, float amnt, int stamp)
         prev = temp;
         temp = temp->next;
     }
+
+    // Insert new transaction
     struct Transaction *newTransaction = (struct Transaction *)malloc(sizeof(struct Transaction));
     newTransaction->userID = uID;
     newTransaction->transactionID = tID;
@@ -66,7 +69,8 @@ void display()
         struct Transaction *temp = List[i];
         while (temp)
         {
-            printf("TransactionID: %d UserID: %d Amount: %f Timestamp: %d\n", temp->transactionID, temp->userID, temp->amount, temp->timestamp);
+            printf("TransactionID: %d UserID: %d Amount: %.2f Timestamp: %d\n",
+                   temp->transactionID, temp->userID, temp->amount, temp->timestamp);
             temp = temp->next;
         }
     }
@@ -74,12 +78,11 @@ void display()
 
 int main()
 {
-    int tID = 0;
-    int uID = 0;
-    float amnt = 0;
-    int stamp = 0;
-    int choice;
+    int tID, uID, stamp, choice;
+    float amnt;
+
     printf("Type 1 to insert.\nType 2 to display.\nType 3 to exit.\n");
+
     while (1)
     {
         printf("Enter choice: ");
@@ -103,7 +106,6 @@ int main()
 
         default:
             printf("Enter a valid choice\n");
-            break;
         }
     }
 }
